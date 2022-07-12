@@ -1,0 +1,39 @@
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define OLED_RESET 4
+Adafruit_SSD1306 display(OLED_RESET);
+
+#define ENCA 2
+int counter = 0;
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  attachInterrupt(digitalPinToInterrupt(ENCA),detect,FALLING);
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
+ 
+  display.display();
+  delay(2000);
+
+ // Clear the buffer.
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.setTextColor(WHITE);
+}
+
+void loop() {
+  display.setCursor(0, 0);
+  display.print("Value: ");
+  display.println(counter);
+  display.display(); //you have to tell the display to...display
+  delay(1000);
+  display.clearDisplay();
+}
+
+void detect(){
+   counter+=1;
+   Serial.println(counter);
+}
